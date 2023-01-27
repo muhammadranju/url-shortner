@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="css/frontend.css" />
+
+  <meta name="keywords" content="short url, url shortener, online url shortener, free url shortener" />
+  <meta name="description" content="Use this URL Shortener service to shorten your long URLs!" />
+  <meta property="og:title" content="URL Shortener" />
+  <meta property="og:description" content="Use this URL Shortener service to shorten your long URLs!" />
+  <meta property="og:image" content="/images/logo.png" />
+
+  <script type="text/javascript" src="js/jquery.min.js"></script>
+  <title>URL Shortener</title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <div class="container">
+    <div class="row">
+      <!-- <div class="col-lg-10 offset-lg-1"> -->
+      <div class="col-lg-12 ">
+
+        <script type="text/javascript">
+          $(document).ready(function() {
+            "use strict";
+
+            $(window).keydown(function(event) {
+              if (event.keyCode === 13) {
+                event.preventDefault();
+                return false;
+              }
+            });
+
+            $.fn.shortlink({
+              // ajax: 'https://short.php8developer.com/ajax/short',
+              // siteUrl: 'https://short.php8developer.com',
+              qr: '#qr',
+              copy: '#copy',
+              shortlink: '#shortlink',
+              url: '#url',
+              create: '#create',
+              form: '#shortForm',
+              shortarea: '#short-area',
+              notice: '#copy-notice',
+              share: '.share42init',
+            });
+          });
+        </script>
+
+        <h1 class="mt-4 text-primary text-center site-name"> URL Shortener</h1>
+        <div class="card mt-4">
+          <div class="card-body">
+            <h5 class="card-title text-center mb-4"> Paste the long URL and make it short! <a href="/"><button class="btn btn-info">Reload</button></a></h5>
+            <form id="shortForm" action="/" method="post">
+              <div class="input-group mb-4">
+                <input type="text" class="form-control form-control-lg" name="longURL" id="longURL" placeholder="https://techyzoon.com">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" id="create"> SHORTEN </button>
+                </div>
+              </div>
+            </form>
+            <p class="mt-4 text-center"> This is a free online service which helps you shorten long URLs that never expire. </p>
+          </div>
+        </div>
+
+
+        <div id="short-area" class=<%=disnone?disnone:"disnone" %>>
+          <h2 class="mt-4 text-primary text-center site-name"> Your shortened URL </h2>
+          <div class="card">
+            <div class="card-body">
+              <form action=""></form>
+              <div class="form-group row">
+                <label for="shortlink" class="col-md-2 col-form-label"> Short link </label>
+                <div class="col-md-10">
+                  <div class="input-group mb-4">
+                    <input type="text" di class="form-control form-control-lg" name="shortLink" id="shortlink" value="<%=newLongURL %> ">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" id="d_clip_button" data-clipboard-target="#shortlink"> Copy </button>
+                    </div>
+                    <div id="copy-notice" style="visibility:hidden;">Copied</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <h3 class="text-primary mt-4">Recently added URLs</h3>
+        <div class="table-responsive">
+          <table class="table table-results">
+            <thead class="table-primary">
+              <tr>
+                <th>Short URL</th>
+                <th>Long URL</th>
+                <th>Datetime</th>
+                <th>Link</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(Links of allLinks){ %>
+              <tr>
+                <td name="shortLink" id="shortlink">
+                  <strong><%=Links.shortURL ? Links.shortURL:"" %> </strong>
+                </td>
+                <td><%=Links.longURL? Links.longURL:""%></td>
+                <td><%=Links.dateTime?Links.dateTime:"" %></td>
+                <td>
+                  <a href=<%=Links.shortURL%> target="_blank"><button class="btn btn-info">Open</button></a>
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- <ul class="list-group list-group-horizontal-md mt-4" style="width: 100%">
+          <li class="list-group-item flex-fill">
+            Total Hits: <strong>3,692,859</strong>
+          </li>
+          <li class="list-group-item flex-fill">
+            Total URLs: <strong>302,957</strong>
+          </li>
+          <li class="list-group-item flex-fill">
+            Today's added URLs: <strong>0</strong>
+          </li>
+        </ul> -->
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-auto">
+    <div class="container">
+      <div class="row mt-3">
+        <div class="col-lg-10 offset-lg-1">
+          <p>Developed by <strong><a href="https://github.com/muhammadranju" target="_blank">Muhammad Ranju</a></strong></p>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script type="text/javascript" src="js/clipboard.min.js"></script>
+  <script type="text/javascript" src="js/share42.js"></script>
+  <script type="text/javascript" src="js/frontend8510.js?v=0.2"></script>
+</body>
+
+</html>
