@@ -29,7 +29,7 @@ const shortLinkPostController = async (req, res, next) => {
         const { longURL } = req.body;
         const shortLink = shortid.generate().toLowerCase();
 
-        const newLongURL = `http://${req.hostname}:${process.env.PORT}/${shortLink}`;
+        const newLongURL = `https://${req.hostname}/${shortLink}`;
         const disnone = {};
         const links = new Link({
             longURL,
