@@ -1,9 +1,6 @@
 const { Schema, model } = require("mongoose");
 const moment = require("moment");
 
-const now = new Date();
-const localDate = now.toLocaleDateString();
-const localTime = now.toLocaleTimeString();
 const linkSchema = new Schema({
   longURL: {
     type: String,
@@ -24,7 +21,7 @@ const linkSchema = new Schema({
 
   dateTime: {
     type: String,
-    default: `${localDate}, ${localTime}`,
+    default: moment().format("D-MMM-YYYY, h:mm:ss A"),
   },
 });
 
