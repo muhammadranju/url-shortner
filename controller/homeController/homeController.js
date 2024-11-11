@@ -97,16 +97,15 @@ const shortLinkParamsController = async (req, res, next) => {
   try {
     const { links } = req.params;
     const link = await Link.findOne({ shotLink: links });
-    link.totalHits++;
+    link?.totalHits + 1;
 
-    if (link?.totalHits > 2) {
+    if (link?.totalHits > 0) {
       return res.status(404).render("pages/maximumHits.ejs");
     }
 
     if (!link) {
       return res.status(404).render("pages/404.ejs");
     }
-    // console.log(link);
     await link.save();
     return res.status(202).redirect(link.longURL);
   } catch (error) {
