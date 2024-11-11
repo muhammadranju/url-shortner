@@ -1,0 +1,70 @@
+<h3 class="text-sky-400 mt-4 text-2xl font-bold">Recently added URLs</h3>
+<div class="table-responsive rounded-xl">
+  <table class="table table-results text-slate-200">
+    <thead class="table-primary bg-sky-600 border-0 rounded-xl">
+      <tr>
+        <th>Short URL</th>
+        <th>Total Hits</th>
+        <th>Long URL</th>
+        <th>Datetime</th>
+        <th>Link</th>
+      </tr>
+    </thead>
+    <tbody class="bg-slate-800">
+      <% for(Links of allLinks){ %>
+      <tr>
+        <td class="font-bold text-base" name="shortLink" id="shortlink">
+          <strong> <%=Links?.shortURL ? Links?.shortURL:"" %> </strong>
+        </td>
+        <td><%=Links?.totalHits ? Links?.totalHits:0 %></td>
+        <td><%=Links?.longURL? Links?.longURL:""%></td>
+        <td><%=Links.dateTime?Links?.dateTime:"" %></td>
+        <td>
+          <a href="<%=Links.shortURL %>" target="_blank"
+            ><button class="btn bg-sky-500 rounded-full text-slate-200">
+              Open
+            </button></a
+          >
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <div class="flex justify-center items-center gap-x-3">
+    <!-- Prev Button -->
+    <% if (currentPage > 1) { %>
+    <a
+      href="?page=<%= currentPage - 1 %>&limit=<%= limit %>"
+      class="btn bg-sky-700 text-slate-200 rounded-full text-xl"
+    >
+      Prev-
+    </a>
+    <% } else { %>
+    <!-- Disabled Prev Button if on the first page -->
+    <button
+      class="btn bg-gray-400 text-slate-200 rounded-full text-xl cursor-not-allowed"
+      disabled
+    >
+      Prev-
+    </button>
+    <% } %>
+
+    <!-- Next Button -->
+    <% if (currentPage < totalPages) { %>
+    <a
+      href="?page=<%= currentPage + 1 %>&limit=<%= limit %>"
+      class="btn bg-sky-600 text-slate-200 rounded-full text-xl"
+    >
+      Next+
+    </a>
+    <% } else { %>
+    <!-- Disabled Next Button if on the last page -->
+    <button
+      class="btn bg-gray-400 text-slate-200 rounded-full text-xl cursor-not-allowed"
+      disabled
+    >
+      Next+
+    </button>
+    <% } %>
+  </div>
+</div>
