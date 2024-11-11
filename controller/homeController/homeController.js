@@ -45,16 +45,21 @@ const shortLinkGetController = async (req, res, next) => {
 };
 
 const shortLinkPostController = async (req, res, next) => {
+  const URL_REGEX =
+    /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|localhost)(:[0-9]{1,5})?(\/[^\s]*)?$/;
+  const MAX_LINKS = 10;
   try {
-    const allLinks = await Link.find().sort({ _id: -1 }).limit(10);
     const { longURL } = req.body;
-    const shortLink = shortid.generate().toLowerCase();
-    console.log(longURL);
-    const newLongURL = `https://${req.hostname}/${shortLink}`;
-    const urlRegex =
-      /^(https?:\/\/)?((([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})|localhost)(:[0-9]{1,5})?(\/[^\s]*)?$/;
 
-    if (!urlRegex.test(longURL.trim())) {
+    if (!longURL) {
+      return res.status(400).json({
+        status: 400,
+        success: false,
+        message: "Please enter a URL",
+      });
+    }
+    const allLinks = await Link.find().sort({ _id: -1 }).limit(MAX_LINKS);
+    if (!URL_REGEX.test(longURL.trim())) {
       return res.status(400).json({
         status: 400,
         success: false,
@@ -62,15 +67,17 @@ const shortLinkPostController = async (req, res, next) => {
       });
     }
 
-    const findOne = await Link.findOne({ longURL: longURL });
+    const existingLink = await Link.findOne({ longURL: longURL });
 
-    if (findOne) {
+    if (existingLink) {
       return res.status(400).json({
         status: 400,
         success: false,
         message: "You can't shorten the same URL twice",
       });
     }
+    const shortLink = shortid.generate().toLowerCase();
+    const newLongURL = `https://${req.hostname}/${shortLink}`;
 
     const links = new Link({
       longURL,
@@ -94,24 +101,34 @@ const shortLinkPostController = async (req, res, next) => {
 };
 
 const shortLinkParamsController = async (req, res, next) => {
+  const MAX_HITS = 100; // Define max hits threshold as a constant
   try {
     const { links } = req.params;
-    const link = await Link.findOne({ shotLink: links });
-    link?.totalHits + 1;
 
-    if (link?.totalHits > 100) {
-      return res.status(404).render("pages/maximumHits.ejs");
-    }
+    // Atomically find and increment totalHits if link exists
+    const link = await Link.findOneAndUpdate(
+      { shotLink: links },
+      { $inc: { totalHits: 1 } },
+      { new: true } // Return the updated document
+    );
 
+    // Handle cases where link is not found
     if (!link) {
       return res.status(404).render("pages/404.ejs");
     }
-    await link.save();
-    return res.status(202).redirect(link.longURL);
+
+    // Check if the link has exceeded maximum allowed hits
+    if (link.totalHits > MAX_HITS) {
+      return res.status(403).render("pages/maximumHits.ejs");
+    }
+
+    // Redirect to the original URL if all conditions are met
+    return res.status(302).redirect(link.longURL);
   } catch (error) {
     next(error);
   }
 };
+
 module.exports = {
   homeGetController,
   shortLinkGetController,
