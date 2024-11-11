@@ -1,5 +1,6 @@
 const shortid = require("shortid");
 const Link = require("../../models/shortURLModel.js");
+const moment = require("moment");
 
 const homeGetController = async (req, res, next) => {
   try {
@@ -66,6 +67,10 @@ const shortLinkPostController = async (req, res, next) => {
         message: "Please enter a valid URL",
       });
     }
+    const formattedCreatedAt = moment(allLinks.createdAt).format(
+      "DD-MM-YYYY, HH:mm:ss"
+    );
+    console.log(formattedCreatedAt);
 
     const existingLink = await Link.findOne({ longURL: longURL });
 
@@ -83,6 +88,7 @@ const shortLinkPostController = async (req, res, next) => {
       longURL,
       shotLink: shortLink,
       shortURL: newLongURL,
+      dateTime: formattedCreatedAt,
     });
     await links.save();
 
