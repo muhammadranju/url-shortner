@@ -99,7 +99,7 @@ const shortLinkParamsController = async (req, res, next) => {
     const link = await Link.findOne({ shotLink: links });
     link?.totalHits + 1;
 
-    if (link?.totalHits > 0) {
+    if (link?.totalHits > 100) {
       return res.status(404).render("pages/maximumHits.ejs");
     }
 
