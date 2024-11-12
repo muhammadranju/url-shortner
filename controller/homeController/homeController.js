@@ -74,11 +74,18 @@ const shortLinkPostController = async (req, res, next) => {
 
     const existingLink = await Link.findOne({ longURL: longURL });
 
+    console.log(existingLink);
+
     if (existingLink) {
       return res.status(400).json({
         status: 400,
         success: false,
-        message: "You can't shorten the same URL twice",
+        message: "You can't shorten the same URL again",
+
+        existingLink: {
+          url: existingLink.shortURL,
+          success: true,
+        },
       });
     }
     const shortLink = shortid.generate().toLowerCase();
