@@ -17,7 +17,9 @@
           <strong> <%=Links?.shortURL ? Links?.shortURL:"" %> </strong>
         </td>
         <td><%=Links?.totalHits ? Links?.totalHits:0 %></td>
-        <td><%=Links?.longURL? Links?.longURL:""%></td>
+        <td title="<%=Links?.longURL%>">
+          <%=Links?.longURL.length>50?Links?.longURL.substring(0,55)+"...":Links?.longURL%>
+        </td>
         <td><%=Links.dateTime?Links?.dateTime:"" %></td>
         <td>
           <a href="<%=Links.shortURL %>" target="_blank"
